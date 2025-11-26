@@ -5,9 +5,6 @@
 
 namespace refl_tests {
 
-inline constexpr struct {
-} cfg_test{};
-
 // TODO can I detect whether a test function have been marked with consteval e.t.c.
 // This may no need to do anything
 inline constexpr struct {
