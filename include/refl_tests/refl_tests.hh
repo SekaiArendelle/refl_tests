@@ -1,20 +1,16 @@
 #pragma once
 
 #include <type_traits>
+#include <concepts>
 #include <meta>
 
 namespace refl_tests {
 
-// TODO can I detect whether a test function have been marked with consteval e.t.c.
-// This may no need to do anything
 inline constexpr struct {
 } compile_time_test{};
 
 inline constexpr struct {
 } runtime_test{};
-
-template<typename Func>
-concept is_valid_runtime_test = ::std::is_function_v<Func> && requires(Func&& func) { func(); };
 
 namespace details {
 
@@ -34,7 +30,7 @@ template<::std::meta::info namespace_info>
 consteval void launch_all_tests() /* noexcept( noexcept([:function_info:]) && ... ) */ {
     template for (constexpr auto function_info :
                   ::std::meta::members_of(namespace_info, ::std::meta::access_context::current())) {
-        if constexpr (not ::refl_tests::is_valid_runtime_test<decltype([:function_info:])>) {
+        if constexpr (not ::std::invocable<decltype([:function_info:])>) {
             continue;
         }
         if constexpr (not ::refl_tests::details::has_runtime_test_annotation(function_info)) {
