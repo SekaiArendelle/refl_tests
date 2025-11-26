@@ -34,13 +34,10 @@ template<::std::meta::info namespace_info>
 consteval void launch_all_tests() /* noexcept( noexcept([:function_info:]) && ... ) */ {
     template for (constexpr auto function_info :
                   ::std::meta::members_of(namespace_info, ::std::meta::access_context::current())) {
-        if constexpr (not ::std::meta::is_function(function_info)) {
+        if constexpr (not ::refl_tests::is_valid_runtime_test<decltype([:function_info:])>) {
             continue;
         }
         if constexpr (not ::refl_tests::details::has_runtime_test_annotation(function_info)) {
-            continue;
-        }
-        if constexpr (not ::refl_tests::is_valid_runtime_test<decltype([:function_info:])>) {
             continue;
         }
         [:function_info:]();
